@@ -58,7 +58,12 @@ class _NewTransactionState extends State<NewTransaction> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(10),
+      padding: EdgeInsets.only(
+        top: 10,
+        bottom: 10,
+        left: 10,
+        right: MediaQuery.of(context).viewInsets.bottom + 10,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: <Widget>[
