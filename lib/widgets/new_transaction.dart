@@ -57,68 +57,67 @@ class _NewTransactionState extends State<NewTransaction> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.only(
-        top: 10,
-        bottom: 10,
-        left: 10,
-        right: MediaQuery.of(context).viewInsets.bottom + 10,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: <Widget>[
-          TextField(
-            decoration: InputDecoration(labelText: 'Title'),
-            controller: _titleController,
-            onSubmitted: (_) => _newTransaction(),
+    return SingleChildScrollView(
+      child: Card(
+        elevation: 5,
+        child: Container(
+          padding: EdgeInsets.only(
+            top: 10,
+            right: 10,
+            left: 10,
+            bottom: MediaQuery.of(context).viewInsets.bottom + 10,
           ),
-          TextField(
-            decoration: InputDecoration(labelText: 'Amount'),
-            controller: _amountController,
-            keyboardType: TextInputType.numberWithOptions(
-              decimal: true,
-            ),
-            onSubmitted: (_) => _newTransaction(),
-          ),
-          Container(
-            height: 70,
-            child: Row(
-              children: <Widget>[
-                Expanded(
-                  child: Text(
-                    _selectedDate == null
-                        ? 'No date selected!'
-                        : 'Picked Date: ${DateFormat.yMMMd().format(_selectedDate)}',
-                  ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: <Widget>[
+              TextField(
+                decoration: InputDecoration(labelText: 'Title'),
+                controller: _titleController,
+                onSubmitted: (_) => _newTransaction(),
+              ),
+              TextField(
+                decoration: InputDecoration(labelText: 'Amount'),
+                controller: _amountController,
+                keyboardType: TextInputType.numberWithOptions(
+                  decimal: true,
                 ),
-                FlatButton(
-                  onPressed: _displayDatePicker,
-                  child: Text(
-                    'Choose Date',
-                    style: TextStyle(
-                      color: Theme.of(context).primaryColor,
-                      fontWeight: FontWeight.bold,
+                onSubmitted: (_) => _newTransaction(),
+              ),
+              Container(
+                height: 70,
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: Text(
+                        _selectedDate == null
+                            ? 'No date selected!'
+                            : 'Picked Date: ${DateFormat.yMMMd().format(_selectedDate)}',
+                      ),
                     ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
-            child: RaisedButton(
-              onPressed: _newTransaction,
-              child: Text(
-                'Add Transaction',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.white,
+                    FlatButton(
+                      onPressed: _displayDatePicker,
+                      textColor: Theme.of(context).primaryColor,
+                      child: Text(
+                        'Choose Date',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              color: Theme.of(context).primaryColor,
-            ),
+              RaisedButton(
+                onPressed: _newTransaction,
+                child: Text(
+                  'Add Transaction',
+                ),
+                color: Theme.of(context).primaryColor,
+                textColor: Colors.white,
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
