@@ -1,5 +1,9 @@
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:xpense/widgets/adaptive_flat_button.dart';
 
 class NewTransaction extends StatefulWidget {
   /// Using stateless widget may result in the loss of internal data stored.
@@ -57,6 +61,8 @@ class _NewTransactionState extends State<NewTransaction> {
 
   @override
   Widget build(BuildContext context) {
+    final mediaQuery = MediaQuery.of(context);
+
     return SingleChildScrollView(
       child: Card(
         elevation: 5,
@@ -65,7 +71,7 @@ class _NewTransactionState extends State<NewTransaction> {
             top: 10,
             right: 10,
             left: 10,
-            bottom: MediaQuery.of(context).viewInsets.bottom + 10,
+            bottom: mediaQuery.viewInsets.bottom + 10,
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.end,
@@ -94,15 +100,9 @@ class _NewTransactionState extends State<NewTransaction> {
                             : 'Picked Date: ${DateFormat.yMMMd().format(_selectedDate)}',
                       ),
                     ),
-                    FlatButton(
-                      onPressed: _displayDatePicker,
-                      textColor: Theme.of(context).primaryColor,
-                      child: Text(
-                        'Choose Date',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+                    AdaptiveFlatButton(
+                      'Choose date',
+                      _displayDatePicker,
                     ),
                   ],
                 ),
