@@ -120,13 +120,53 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final mediaQuery = MediaQuery.of(context);
+  Widget _chartWidget(
+      double sizeValue, PreferredSizeWidget appBar, MediaQueryData mediaQuery) {
+    return Container(
+      height: (mediaQuery.size.height -
+              appBar.preferredSize.height -
+              mediaQuery.padding.top) *
+          sizeValue,
+      child: Chart(_recentTransactions),
+    );
+  }
 
-    final isLandscape = mediaQuery.orientation == Orientation.landscape;
+  List<Widget> _buildLandscape(PreferredSizeWidget appBar,
+      MediaQueryData mediaQuery, Widget transactionListWidget) {
+    return [
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Text(
+            'Show chart',
+            style: Theme.of(context).textTheme.title,
+          ),
+          Switch.adaptive(
+              activeColor: Theme.of(context).primaryColor,
+              value: _showChart,
+              onChanged: (value) {
+                setState(() {
+                  _showChart = value;
+                });
+              }),
+        ],
+      ),
+      _showChart
+          ? _chartWidget(0.7, appBar, mediaQuery)
+          : transactionListWidget,
+    ];
+  }
 
-    final PreferredSizeWidget appBar = Platform.isIOS
+  List<Widget> _buildPortrait(PreferredSizeWidget appBar,
+      MediaQueryData mediaQuery, Widget transactionListWidget) {
+    return [
+      _chartWidget(0.3, appBar, mediaQuery),
+      transactionListWidget,
+    ];
+  }
+
+  PreferredSizeWidget _buildAppBar() {
+    return Platform.isIOS
         ? CupertinoNavigationBar(
             middle: Text('Xpense'),
             trailing: Row(
@@ -148,6 +188,15 @@ class _HomePageState extends State<HomePage> {
               )
             ],
           );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final mediaQuery = MediaQuery.of(context);
+
+    final isLandscape = mediaQuery.orientation == Orientation.landscape;
+
+    final PreferredSizeWidget appBar = _buildAppBar();
 
     final transactionListWidget = Container(
       height: (mediaQuery.size.height -
@@ -157,43 +206,23 @@ class _HomePageState extends State<HomePage> {
       child: TransactionList(_userTransactions, _deleteTransaction),
     );
 
-    Widget chartWidget(double sizeValue) {
-      return Container(
-        height: (mediaQuery.size.height -
-                appBar.preferredSize.height -
-                mediaQuery.padding.top) *
-            sizeValue,
-        child: Chart(_recentTransactions),
-      );
-    }
-
     final pageBody = SafeArea(
       child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             if (isLandscape)
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text(
-                    'Show chart',
-                    style: Theme.of(context).textTheme.title,
-                  ),
-                  Switch.adaptive(
-                      activeColor: Theme.of(context).primaryColor,
-                      value: _showChart,
-                      onChanged: (value) {
-                        setState(() {
-                          _showChart = value;
-                        });
-                      }),
-                ],
+              ..._buildLandscape(
+                appBar,
+                mediaQuery,
+                transactionListWidget,
               ),
-            if (!isLandscape) chartWidget(0.3),
-            if (!isLandscape) transactionListWidget,
-            if (isLandscape)
-              _showChart ? chartWidget(0.7) : transactionListWidget,
+            if (!isLandscape)
+              ..._buildPortrait(
+                appBar,
+                mediaQuery,
+                transactionListWidget,
+              ),
           ],
         ),
       ),
